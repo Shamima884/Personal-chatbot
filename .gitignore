@@ -1,0 +1,7 @@
+# Keep secrets and generated files out of version control.
+.env
+__pycache__/
+*.pyc
+
+# Local browser profile cache used during web testing (contains sensitive data).
+webapp/.chrome-tmp/

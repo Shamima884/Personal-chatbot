@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dr. Shamima Jahan — Chatbots</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="brand">
+        <div class="logo">🩺</div>
+        <div class="brand-text">
+          <h1>Dr. Shamima Jahan</h1>
+          <p class="tagline">Associate Professor · Physiology</p>
+        </div>
+      </div>
+      <nav class="tabs" id="tabs" aria-label="Chatbot selection">
+        <button class="tab active" data-bot="custom">Custom</button>
+        <button class="tab" data-bot="profile">Profile</button>
+        <button class="tab" data-bot="story">Story</button>
+        <button class="tab" data-bot="main">Groq AI</button>
+      </nav>
+    </header>
+
+    <main class="chat-wrap">
+      <div class="chat" id="chat" aria-live="polite"></div>
+
+      <div class="suggestions" id="suggestions"></div>
+
+      <form class="input-bar" id="input-form" autocomplete="off">
+        <input
+          type="text"
+          id="message"
+          placeholder="Type your question…"
+          autocomplete="off"
+          aria-label="Message"
+        />
+        <button type="submit" id="send-btn">Send</button>
+      </form>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
