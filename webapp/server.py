@@ -76,6 +76,10 @@ def load_env(path):
 
 
 def get_api_key():
+    # Cloud platforms (Render, etc.) inject the key via environment variables.
+    env_key = os.environ.get("API_KEY", "").strip()
+    if env_key:
+        return env_key
     for path in (os.path.join(PROJECT_ROOT, ".env"),
                  os.path.join(BASE_DIR, ".env")):
         key = load_env(path).get("API_KEY", "").strip()
@@ -194,11 +198,13 @@ class Handler(BaseHTTPRequestHandler):
 # ---------------------------------------------------------------------------
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
-    port = DEFAULT_PORT
+    # Render injects PORT (and expects the server to bind to 0.0.0.0).
+    port = int(os.environ.get("PORT", DEFAULT_PORT))
     if argv and argv[0].isdigit():
         port = int(argv[0])
-    server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
-    print(f"Serving chatbot web app at http://127.0.0.1:{port}")
+    host = os.environ.get("HOST", "0.0.0.0")
+    server = ThreadingHTTPServer((host, port), Handler)
+    print(f"Serving chatbot web app at http://{host}:{port}")
     print("Press Ctrl+C to stop.")
     try:
         server.serve_forever()

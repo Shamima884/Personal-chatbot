@@ -5,3 +5,6 @@ __pycache__/
 
 # Local browser profile cache used during web testing (contains sensitive data).
 webapp/.chrome-tmp/
+
+# Local push error log.
+push_ssh_out.txt
