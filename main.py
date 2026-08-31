@@ -117,10 +117,10 @@ def run_selftest():
         print("[selftest] ERROR: API_KEY not found in .env")
         return 1
     print(f"[selftest] model = {DEFAULT_MODEL}")
-    print("[selftest] sending: 'Hello, who are you?'")
+    print("[selftest] sending: 'Hello, who is Dr. Shamima Jahan?'")
     try:
         reply = chat_completion(
-            [{"role": "user", "content": "Hello, who are you?"}]
+            [{"role": "user", "content": "Hello, who is Dr. Shamima Jahan?"}]
         )
         print("[selftest] reply: " + reply)
         return 0

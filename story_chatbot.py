@@ -23,21 +23,21 @@ KNOWLEDGE = [
         "label": "introduction",
         "keywords": ["who", "about", "introduce", "name", "yourself", "bio",
                      "profile", "description", "background"],
-        "answer": "I am Dr. Shamima Jahan.",
+        "answer": "She is Dr. Shamima Jahan.",
         "details": (
-            "I am Dr. Shamima Jahan, a girl from a small village in rural "
-            "Bangladesh. I came from a Bengali medium background and moved to "
-            "the bustling streets of Dhaka to pursue my dreams of becoming a "
-            "doctor. Today I carry my medical degree and the lessons learned "
-            "through my struggles."
+            "Dr. Shamima Jahan is a girl from a small village in rural "
+            "Bangladesh. She came from a Bengali medium background and moved "
+            "to the bustling streets of Dhaka to pursue her dreams of becoming "
+            "a doctor. Today she carries her medical degree and the lessons "
+            "learned through her struggles."
         ),
     },
     {
         "label": "origin",
-        "keywords": ["village", "rural", "where from", "hometown", "born",
-                     "origin", "native", "from"],
+        "keywords": ["village", "rural", "where from", "where is she from",
+                     "hometown", "born", "origin", "native", "from"],
         "answer": (
-            "I am from a small village in rural Bangladesh."
+            "She is from a small village in rural Bangladesh."
         ),
     },
     {
@@ -45,8 +45,8 @@ KNOWLEDGE = [
         "keywords": ["bengali", "medium", "language", "tongue", "native",
                      "mother", "english"],
         "answer": (
-            "I come from a Bengali medium background and always communicated "
-            "in my native tongue, Bengali."
+            "She comes from a Bengali medium background and always "
+            "communicated in her native tongue, Bengali."
         ),
     },
     {
@@ -54,8 +54,8 @@ KNOWLEDGE = [
         "keywords": ["dream", "goal", "aspiration", "ambition", "become doctor",
                      "wanted", "purpose", "intention", "why"],
         "answer": (
-            "My dream was to become a doctor. I journeyed to Dhaka to pursue "
-            "this dream."
+            "Her dream was to become a doctor. She journeyed to Dhaka to "
+            "pursue this dream."
         ),
     },
     {
@@ -63,10 +63,10 @@ KNOWLEDGE = [
         "keywords": ["dhaka", "journey", "moved", "shift", "stepped", "start",
                      "begin", "go", "city", "embark", "left", "travell"],
         "answer": (
-            "As I stepped into the bustling streets of Dhaka, my heart raced "
-            "with excitement and trepidation -- I had just embarked on a "
-            "journey from my small rural village to pursue my dreams of "
-            "becoming a doctor."
+            "As she stepped into the bustling streets of Dhaka, her heart "
+            "raced with excitement and trepidation -- she had just embarked "
+            "on a journey from her small rural village to pursue her dreams "
+            "of becoming a doctor."
         ),
     },
     {
@@ -74,10 +74,10 @@ KNOWLEDGE = [
         "keywords": ["barrier", "challenge", "struggle", "difficult", "problem",
                      "obstacle", "hurdle", "hard", "trouble", "issue"],
         "answer": (
-            "The formidable challenge I faced was the language barrier. "
-            "Coming from a Bengali medium background, I found myself suddenly "
-            "in a world where every lecture and textbook was in English -- a "
-            "language that felt foreign and intimidating."
+            "The formidable challenge she faced was the language barrier. "
+            "Coming from a Bengali medium background, she found herself "
+            "suddenly in a world where every lecture and textbook was in "
+            "English -- a language that felt foreign and intimidating."
         ),
     },
     {
@@ -86,12 +86,12 @@ KNOWLEDGE = [
                      "afraid", "fear", "overwhelm", "nervous", "sad",
                      "nightmare", "lost", "doubt"],
         "answer": (
-            "My first few weeks were a nightmare. I felt despair wash over me "
-            "like a dark cloud, became demoralized, questioned my abilities and "
-            "worthiness, and feared I did not belong. Limiting beliefs crept "
-            "in, whispering that perhaps I was not cut out for this path, and "
-            "the fear of failure loomed so large that I felt like a ship lost "
-            "at sea."
+            "Her first few weeks were a nightmare. She felt despair wash over "
+            "her like a dark cloud, became demoralized, questioned her "
+            "abilities and worthiness, and feared she did not belong. Limiting "
+            "beliefs crept in, whispering that perhaps she was not cut out for "
+            "this path, and the fear of failure loomed so large that she felt "
+            "like a ship lost at sea."
         ),
     },
     {
@@ -99,22 +99,23 @@ KNOWLEDGE = [
         "keywords": ["choice", "decision", "choose", "surrender", "give up",
                      "quit", "rise above", "stay"],
         "answer": (
-            "I realized I had a choice: I could either succumb to the struggle "
-            "or rise above it. I chose to rise above."
+            "She realized she had a choice: she could either succumb to the "
+            "struggle or rise above it. She chose to rise above."
         ),
     },
     {
         "label": "process",
         "keywords": ["dedicate", "focus", "commit", "learning english",
                      "dictionary", "senior", "classmates", "support", "practice",
-                     "study", "improve english", "improve my english"],
+                     "study", "improve english", "improve my english",
+                     "improve her english"],
         "answer": (
-            "I committed to transform my fear into focus. I dedicated myself "
-            "to learning English, reached out to seniors and classmates for "
-            "support, and spent countless nights poring over dictionaries and "
-            "practicing conversations -- slowly turning my weaknesses into "
-            "strengths. I realized that a specific target and a clear course "
-            "can change a life."
+            "She committed to transform her fear into focus. She dedicated "
+            "herself to learning English, reached out to seniors and "
+            "classmates for support, and spent countless nights poring over "
+            "dictionaries and practicing conversations -- slowly turning her "
+            "weaknesses into strengths. She realized that a specific target "
+            "and a clear course can change a life."
         ),
     },
     {
@@ -123,10 +124,10 @@ KNOWLEDGE = [
                      "improvement", "hope", "strong", "succeed", "progress",
                      "pay off", "perseverance", "paid off"],
         "answer": (
-            "With each new word I learned and each concept I understood, a "
-            "spark of hope ignited within me. As my English improved, so did "
-            "my confidence. I began to succeed in my studies, and the dream "
-            "that once felt so distant became a tangible reality. My "
+            "With each new word she learned and each concept she understood, "
+            "a spark of hope ignited within her. As her English improved, so "
+            "did her confidence. She began to succeed in her studies, and the "
+            "dream that once felt so distant became a tangible reality. Her "
             "perseverance paid off."
         ),
     },
@@ -135,9 +136,9 @@ KNOWLEDGE = [
         "keywords": ["lesson", "teach", "learned", "realise", "realize", "message",
                      "takeaway", "moral", "meaning", "insight", "stepping"],
         "answer": (
-            "I learned that challenges are not roadblocks; they are stepping "
-            "stones to greatness. And most importantly, I discovered that the "
-            "power to overcome adversity lies within each of us."
+            "She learned that challenges are not roadblocks; they are stepping "
+            "stones to greatness. And most importantly, she discovered that "
+            "the power to overcome adversity lies within each of us."
         ),
     },
     {
@@ -148,7 +149,7 @@ KNOWLEDGE = [
         "answer": (
             "If you ever find yourself facing obstacles, remember that with "
             "determination and the right support, you can break through any "
-            "barrier. Our backgrounds do not define our futures -- my journey "
+            "barrier. Our backgrounds do not define our futures -- her journey "
             "is a testament to that."
         ),
     },
@@ -159,9 +160,9 @@ KNOWLEDGE = [
             "I can tell you about Dr. Shamima Jahan's inspiring journey -- her "
             "rural and Bangladesh background, her move to Dhaka, the language "
             "barrier she faced, her struggle, how she overcame it, and the "
-            "lessons she learned. Ask me things like \"What challenge did you "
-            "face?\", \"How did you improve your English?\", or \"What lesson "
-            "did you learn?\""
+            "lessons she learned. Ask me things like \"What challenge did she "
+            "face?\", \"How did she improve her English?\", or \"What lesson "
+            "did she learn?\""
         ),
     },
 ]
@@ -171,10 +172,10 @@ PRIORITY = ["introduction", "challenge", "emotions", "lesson", "process",
             "background_language", "dream_goal", "choice", "help"]
 
 FALLBACK = (
-    "Sorry, I can only answer questions that are based on the story I was "
-    "given. I have no information about that. You can ask me about my "
-    "background, my journey to Dhaka, the language barrier I faced, my "
-    "feelings, how I overcame my difficulties, or the lesson I learned."
+    "Sorry, I can only answer questions that are based on Dr. Shamima Jahan's "
+    "story. I have no information about that. You can ask about her rural "
+    "background, her journey to Dhaka, the language barrier she faced, her "
+    "feelings, how she overcame her difficulties, or the lesson she learned."
 )
 
 # Words that request the fuller profile summary.
@@ -253,8 +254,9 @@ class ChatApp:
 
         self._add_line("Dr. Shamima Jahan - Journey Story", "title")
         self._add_line(
-            "Ask about my background, my move to Dhaka, the language barrier, "
-            "my feelings, how I overcame the odds, and the lesson I learned.",
+            "Ask about her background, her move to Dhaka, the language barrier, "
+            "her feelings, how she overcame the odds, and the lesson she "
+            "learned.",
             "hint",
         )
 
@@ -331,16 +333,16 @@ class ChatApp:
 # Entry point -----------------------------------------------------------------
 # ---------------------------------------------------------------------------
 TEST_QUESTIONS = [
-    "Who are you?",
-    "Where are you from?",
-    "What was your dream?",
-    "What happened when you came to Dhaka?",
-    "What was the barrier you faced?",
-    "How did you feel in your first weeks?",
-    "How did you improve your English?",
-    "What did your perseverance lead to?",
-    "What lesson did you learn?",
-    "What advice do you have for someone facing obstacles?",
+    "Who is Dr. Shamima Jahan?",
+    "Where is she from?",
+    "What was her dream?",
+    "What happened when she came to Dhaka?",
+    "What was the barrier she faced?",
+    "How did she feel in her first weeks?",
+    "How did she improve her English?",
+    "What did her perseverance lead to?",
+    "What lesson did she learn?",
+    "What advice does she have for someone facing obstacles?",
     "What is the capital of France?",
 ]
 

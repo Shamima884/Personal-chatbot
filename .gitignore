@@ -8,3 +8,6 @@ webapp/.chrome-tmp/
 
 # Local push error log.
 push_ssh_out.txt
+
+# Local server runtime logs.
+webapp/server_*.log

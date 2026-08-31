@@ -18,26 +18,35 @@
 const CUSTOM_KNOWLEDGE = [
   {
     label: "introduction",
-    keywords: ["introduce", "about", "who are you", "tell me", "yourself",
-               "describe", "bio", "profile", "background"],
-    answer: "I am Dr. Shamima Jahan.",
+    keywords: ["introduce", "about", "who are you", "who is", "tell me",
+               "yourself", "describe", "bio", "profile", "background",
+               "shamima", "shamima jahan", "dr shamima jahan"],
+    answer: (
+      "Dr. Shamima Jahan is an Associate Professor in the Physiology " +
+      "department at Tairunnessa Memorial Medical College, Gazipur."
+    ),
     details: (
-      "I am Dr. Shamima Jahan. I completed my M.B.B.S from Z.H. Sikder " +
-      "Women's Medical College under Dhaka University. I completed my " +
-      "postgraduate M.Phil in Physiology under B.S.M.M.U. I have been " +
-      "working as an Associate Professor in the Physiology department at " +
-      "Tairunnessa Memorial Medical College, Gazipur for the last 14 " +
-      "years. Every year I have 105 students."
+      "Dr. Shamima Jahan is an Associate Professor in the Physiology " +
+      "department at Tairunnessa Memorial Medical College, Gazipur. She " +
+      "completed her M.B.B.S from Z.H. Sikder Women's Medical College " +
+      "under Dhaka University and her postgraduate M.Phil in Physiology " +
+      "under B.S.M.M.U. She has been working as a medical teacher for " +
+      "the last 14 years, and every year she has 105 students. She has " +
+      "also completed her AI training under the AI Academy of Bangladesh " +
+      "(AIAB) and is one of the masterminds of AIAB. She is the founder " +
+      "of Dr. Jahan's AI Academy and the first AI trainer among the " +
+      "Physiologists of Bangladesh."
     ),
   },
   {
     label: "mbbs",
-    keywords: ["mbbs", "medical college", "bachelor", "undergraduate",
-               "under graduate", "first degree", "medicine degree",
-               "medical degree", "z.h. sikder", "z h sikder"],
+    keywords: ["mbbs", "mbbs degree", "her mbbs", "medical college",
+               "bachelor", "undergraduate", "under graduate",
+               "first degree", "medicine degree", "medical degree",
+               "degree", "z.h. sikder", "z h sikder"],
     answer: (
-      "I completed my M.B.B.S from Z.H. Sikder Women's Medical College " +
-      "under Dhaka University."
+      "She completed her M.B.B.S degree from Z.H. Sikder Women's Medical " +
+      "College under Dhaka University."
     ),
   },
   {
@@ -46,26 +55,31 @@ const CUSTOM_KNOWLEDGE = [
                "higher study", "higher education", "masters", "master",
                "fellowship", "specialization", "b.s.m.m.u", "bsmmu"],
     answer: (
-      "I completed my postgraduate M.Phil in Physiology under B.S.M.M.U."
+      "She completed her postgraduate M.Phil in Physiology under B.S.M.M.U."
     ),
   },
   {
     label: "position",
     keywords: ["position", "designation", "job", "role", "post",
-               "professor", "prof.", "title", "rank", "status"],
+               "professor", "prof.", "title", "rank", "status",
+               "what is her job", "her job", "her position",
+               "her job position"],
     answer: (
-      "I work as an Associate Professor in the Physiology department at " +
-      "Tairunnessa Memorial Medical College, Gazipur."
+      "Her job position is Associate Professor in the Physiology " +
+      "department at Tairunnessa Memorial Medical College, Gazipur."
     ),
   },
   {
     label: "institution",
     keywords: ["institution", "college", "university", "workplace",
-               "where do you work", "where you work", "school",
+               "where do you work", "where you work", "where does she work",
+               "where do she work", "where do she works", "does she work",
+               "she works", "where she work", "shamima work",
+               "does shamima work", "school",
                "tairunnessa", "memorial", "gazipur", "organization",
                "employer", "place"],
     answer: (
-      "I work at Tairunnessa Memorial Medical College, Gazipur, as an " +
+      "She works at Tairunnessa Memorial Medical College, Gazipur, as an " +
       "Associate Professor in the Physiology department."
     ),
   },
@@ -73,14 +87,16 @@ const CUSTOM_KNOWLEDGE = [
     label: "subject",
     keywords: ["subject", "specialty", "speciality", "physiology",
                "department", "teach", "teaching", "field", "subject matter"],
-    answer: "My subject / department is Physiology.",
+    answer: "Her subject / department is Physiology.",
   },
   {
     label: "experience",
-    keywords: ["experience", "how long", "14 years", "years", "seniority",
+    keywords: ["experience", "how long", "how many years", "14 years",
+               "years", "been working", "she has been working",
+               "has she been working", "she been working", "seniority",
                "since", "tenure", "duration", "career"],
     answer: (
-      "I have been working for the last 14 years as Associate Professor " +
+      "She has been working for the last 14 years as Associate Professor " +
       "in the Physiology department at Tairunnessa Memorial Medical " +
       "College, Gazipur."
     ),
@@ -88,8 +104,23 @@ const CUSTOM_KNOWLEDGE = [
   {
     label: "students",
     keywords: ["student", "students", "how many students", "batch",
-               "pupil", "admission", "enroll", "class size", "105"],
-    answer: "Every year I get 105 students.",
+               "pupil", "admission", "enroll", "class size", "105",
+               "she gets", "her students"],
+    answer: "Every year she gets 105 students.",
+  },
+  {
+    label: "ai_qualifications",
+    keywords: ["ai", "artificial intelligence", "a i", "ai training",
+               "aiab", "academy of bangladesh", "ai academy",
+               "mastermind", "founder", "dr jahan", "dr jahans",
+               "ai trainer", "first ai trainer", "physiologist",
+               "training"],
+    answer: (
+      "She has completed her AI training under the AI Academy of " +
+      "Bangladesh (AIAB). She is one of the masterminds of AIAB, the " +
+      "founder of Dr. Jahan's AI Academy, and the first AI trainer " +
+      "among the Physiologists of Bangladesh."
+    ),
   },
   {
     label: "help",
@@ -97,25 +128,27 @@ const CUSTOM_KNOWLEDGE = [
                "options", "about you"],
     answer: (
       "I can tell you about Dr. Shamima Jahan's education, qualifications, " +
-      "job position, workplace, experience, subject and students. " +
-      "For example, ask: \"What is your name?\", \"Where did you study " +
-      "M.B.B.S?\", \"What is your job?\", or \"How many students do you have?\""
+      "AI training, job position, workplace, experience, subject and " +
+      "students. For example, ask: \"Who is Dr. Shamima Jahan?\", " +
+      "\"Where did she complete her M.B.B.S degree?\", \"Where did she " +
+      "complete her AI training?\", or \"What is her job position?\""
     ),
   },
 ];
 
 const CUSTOM_PRIORITY = ["introduction", "institution", "postgraduate", "position",
-                         "mbbs", "students", "experience", "subject", "help"];
+                         "mbbs", "students", "experience", "subject",
+                         "ai_qualifications", "help"];
 
 const CUSTOM_FALLBACK = (
   "Sorry, I can only answer questions that are based on the information " +
   "provided about Dr. Shamima Jahan. I have no information about that. " +
-  "You can ask me about her education, degrees, job, workplace, subject, " +
-  "or her students."
+  "You can ask me about her education, degrees, AI training, job, " +
+  "workplace, subject, or her students."
 );
 
-const SHOW_DETAILS_KEYWORDS = ["detail", "more detail", "full", "complete",
-                               "everything", "all about", "describe yourself"];
+const SHOW_DETAILS_KEYWORDS = ["detail", "more detail", "full", "everything",
+                               "all about", "describe yourself", "tell me about"];
 /* ============================================================
  * 2. Profile chatbot (profile_chatbot.py)
  * ============================================================ */
@@ -124,28 +157,45 @@ const PROFILE_KNOWLEDGE = [
   {
     label: "name",
     keywords: ["name", "who", "called", "your name", "introduce"],
-    answer: "My name is Dr. Shamima Jahan.",
+    answer: "Her name is Dr. Shamima Jahan.",
   },
   {
     label: "age",
     keywords: ["age", "old", "how old", "born", "year old", "44"],
-    answer: "I am 44 years old.",
+    answer: "She is 44 years old.",
   },
   {
     label: "qualification",
     keywords: ["qualification", "degree", "education", "educated",
                "mbbs", "mphil", "m.phil", "physiology", "study", "studied",
-               "academic", "graduated", "doctor degree", "certificate"],
+               "academic", "graduated", "doctor degree", "certificate",
+               "ai", "artificial intelligence"],
     answer: (
-      "My educational qualification is M.B.B.S and M.Phil in Physiology."
+      "Her educational qualifications are M.B.B.S, M.Phil in Physiology, " +
+      "and AI training from the AI Academy of Bangladesh."
+    ),
+  },
+  {
+    label: "ai",
+    keywords: ["ai", "artificial intelligence", "a i", "ai training",
+               "aiab", "academy of bangladesh", "ai academy",
+               "mastermind", "founder", "dr jahan", "dr jahans",
+               "ai trainer", "first ai trainer", "physiologist",
+               "training"],
+    answer: (
+      "She has completed her AI training under the AI Academy of " +
+      "Bangladesh (AIAB). She is one of the masterminds of AIAB, the " +
+      "founder of Dr. Jahan's AI Academy, and the first AI trainer " +
+      "among the Physiologists of Bangladesh."
     ),
   },
   {
     label: "occupation",
     keywords: ["occupation", "job", "profession", "work", "do you do",
-               "professionally", "career", "employment", "role", "earning",
+               "what does she do", "does she do", "professionally",
+               "career", "employment", "role", "earning",
                "teaching", "teacher", "lecture"],
-    answer: "My occupation is medical teaching.",
+    answer: "Her occupation is medical teaching.",
   },
   {
     label: "responsibility",
@@ -153,26 +203,28 @@ const PROFILE_KNOWLEDGE = [
                "teach", "lecture", "class", "students", "take", "classes",
                "responsibilities", "day"],
     answer: (
-      "My responsibility is to take the lecture class to the first year " +
+      "Her responsibility is to take the lecture class to the first year " +
       "medical students."
     ),
   },
   {
     label: "jobstation",
     keywords: ["job station", "jobstation", "workplace", "college",
-               "institution", "where do you work", "university", "gazipur",
+               "institution", "where do you work", "where does she work",
+               "where do she work", "does she work", "university", "gazipur",
                "tairunnessa", "hospital", "organization", "employer"],
-    answer: "My job station is Tairunnessa Medical College, Gazipur.",
+    answer: "Her job station is Tairunnessa Medical College, Gazipur.",
   },
 ];
 
-const PROFILE_PRIORITY = ["name", "age", "qualification", "jobstation", "occupation",
+const PROFILE_PRIORITY = ["name", "age", "qualification", "ai", "jobstation", "occupation",
                           "responsibility"];
 
 const PROFILE_FALLBACK = (
-  "Sorry, I can only answer questions that are based on the profile I was " +
-  "given. I have no information about that. You can ask me my name, age, " +
-  "educational qualification, occupation, responsibility, or job station."
+  "Sorry, I can only answer questions that are based on Dr. Shamima Jahan's " +
+  "profile. I have no information about that. You can ask about her name, " +
+  "age, educational qualification, AI training, occupation, responsibility, " +
+  "or job station."
 );
 /* ============================================================
  * 3. Story chatbot (story_chatbot.py)
@@ -183,28 +235,28 @@ const STORY_KNOWLEDGE = [
     label: "introduction",
     keywords: ["who", "about", "introduce", "name", "yourself", "bio",
                "profile", "description", "background"],
-    answer: "I am Dr. Shamima Jahan.",
+    answer: "She is Dr. Shamima Jahan.",
     details: (
-      "I am Dr. Shamima Jahan, a girl from a small village in rural " +
-      "Bangladesh. I came from a Bengali medium background and moved to " +
-      "the bustling streets of Dhaka to pursue my dreams of becoming a " +
-      "doctor. Today I carry my medical degree and the lessons learned " +
-      "through my struggles."
+      "Dr. Shamima Jahan is a girl from a small village in rural " +
+      "Bangladesh. She came from a Bengali medium background and moved to " +
+      "the bustling streets of Dhaka to pursue her dreams of becoming a " +
+      "doctor. Today she carries her medical degree and the lessons learned " +
+      "through her struggles."
     ),
   },
   {
     label: "origin",
-    keywords: ["village", "rural", "where from", "hometown", "born",
-               "origin", "native", "from"],
-    answer: "I am from a small village in rural Bangladesh.",
+    keywords: ["village", "rural", "where from", "where is she from",
+               "hometown", "born", "origin", "native", "from"],
+    answer: "She is from a small village in rural Bangladesh.",
   },
   {
     label: "background_language",
     keywords: ["bengali", "medium", "language", "tongue", "native",
                "mother", "english"],
     answer: (
-      "I come from a Bengali medium background and always communicated " +
-      "in my native tongue, Bengali."
+      "She comes from a Bengali medium background and always communicated " +
+      "in her native tongue, Bengali."
     ),
   },
   {
@@ -212,7 +264,7 @@ const STORY_KNOWLEDGE = [
     keywords: ["dream", "goal", "aspiration", "ambition", "become doctor",
                "wanted", "purpose", "intention", "why"],
     answer: (
-      "My dream was to become a doctor. I journeyed to Dhaka to pursue " +
+      "Her dream was to become a doctor. She journeyed to Dhaka to pursue " +
       "this dream."
     ),
   },
@@ -221,9 +273,9 @@ const STORY_KNOWLEDGE = [
     keywords: ["dhaka", "journey", "moved", "shift", "stepped", "start",
                "begin", "go", "city", "embark", "left", "travell"],
     answer: (
-      "As I stepped into the bustling streets of Dhaka, my heart raced " +
-      "with excitement and trepidation -- I had just embarked on a " +
-      "journey from my small rural village to pursue my dreams of " +
+      "As she stepped into the bustling streets of Dhaka, her heart raced " +
+      "with excitement and trepidation -- she had just embarked on a " +
+      "journey from her small rural village to pursue her dreams of " +
       "becoming a doctor."
     ),
   },
@@ -232,8 +284,8 @@ const STORY_KNOWLEDGE = [
     keywords: ["barrier", "challenge", "struggle", "difficult", "problem",
                "obstacle", "hurdle", "hard", "trouble", "issue"],
     answer: (
-      "The formidable challenge I faced was the language barrier. " +
-      "Coming from a Bengali medium background, I found myself suddenly " +
+      "The formidable challenge she faced was the language barrier. " +
+      "Coming from a Bengali medium background, she found herself suddenly " +
       "in a world where every lecture and textbook was in English -- a " +
       "language that felt foreign and intimidating."
     ),
@@ -244,11 +296,11 @@ const STORY_KNOWLEDGE = [
                "afraid", "fear", "overwhelm", "nervous", "sad",
                "nightmare", "lost", "doubt"],
     answer: (
-      "My first few weeks were a nightmare. I felt despair wash over me " +
-      "like a dark cloud, became demoralized, questioned my abilities and " +
-      "worthiness, and feared I did not belong. Limiting beliefs crept " +
-      "in, whispering that perhaps I was not cut out for this path, and " +
-      "the fear of failure loomed so large that I felt like a ship lost " +
+      "Her first few weeks were a nightmare. She felt despair wash over her " +
+      "like a dark cloud, became demoralized, questioned her abilities and " +
+      "worthiness, and feared she did not belong. Limiting beliefs crept " +
+      "in, whispering that perhaps she was not cut out for this path, and " +
+      "the fear of failure loomed so large that she felt like a ship lost " +
       "at sea."
     ),
   },
@@ -257,21 +309,22 @@ const STORY_KNOWLEDGE = [
     keywords: ["choice", "decision", "choose", "surrender", "give up",
                "quit", "rise above", "stay"],
     answer: (
-      "I realized I had a choice: I could either succumb to the struggle " +
-      "or rise above it. I chose to rise above."
+      "She realized she had a choice: she could either succumb to the " +
+      "struggle or rise above it. She chose to rise above."
     ),
   },
   {
     label: "process",
     keywords: ["dedicate", "focus", "commit", "learning english",
                "dictionary", "senior", "classmates", "support", "practice",
-               "study", "improve english", "improve my english"],
+               "study", "improve english", "improve my english",
+               "improve her english"],
     answer: (
-      "I committed to transform my fear into focus. I dedicated myself " +
+      "She committed to transform her fear into focus. She dedicated herself " +
       "to learning English, reached out to seniors and classmates for " +
       "support, and spent countless nights poring over dictionaries and " +
-      "practicing conversations -- slowly turning my weaknesses into " +
-      "strengths. I realized that a specific target and a clear course " +
+      "practicing conversations -- slowly turning her weaknesses into " +
+      "strengths. She realized that a specific target and a clear course " +
       "can change a life."
     ),
   },
@@ -281,10 +334,10 @@ const STORY_KNOWLEDGE = [
                "improvement", "hope", "strong", "succeed", "progress",
                "pay off", "perseverance", "paid off"],
     answer: (
-      "With each new word I learned and each concept I understood, a " +
-      "spark of hope ignited within me. As my English improved, so did " +
-      "my confidence. I began to succeed in my studies, and the dream " +
-      "that once felt so distant became a tangible reality. My " +
+      "With each new word she learned and each concept she understood, a " +
+      "spark of hope ignited within her. As her English improved, so did " +
+      "her confidence. She began to succeed in her studies, and the dream " +
+      "that once felt so distant became a tangible reality. Her " +
       "perseverance paid off."
     ),
   },
@@ -293,8 +346,8 @@ const STORY_KNOWLEDGE = [
     keywords: ["lesson", "teach", "learned", "realise", "realize", "message",
                "takeaway", "moral", "meaning", "insight", "stepping"],
     answer: (
-      "I learned that challenges are not roadblocks; they are stepping " +
-      "stones to greatness. And most importantly, I discovered that the " +
+      "She learned that challenges are not roadblocks; they are stepping " +
+      "stones to greatness. And most importantly, she discovered that the " +
       "power to overcome adversity lies within each of us."
     ),
   },
@@ -306,7 +359,7 @@ const STORY_KNOWLEDGE = [
     answer: (
       "If you ever find yourself facing obstacles, remember that with " +
       "determination and the right support, you can break through any " +
-      "barrier. Our backgrounds do not define our futures -- my journey " +
+      "barrier. Our backgrounds do not define our futures -- her journey " +
       "is a testament to that."
     ),
   },
@@ -317,9 +370,9 @@ const STORY_KNOWLEDGE = [
       "I can tell you about Dr. Shamima Jahan's inspiring journey -- her " +
       "rural and Bangladesh background, her move to Dhaka, the language " +
       "barrier she faced, her struggle, how she overcame it, and the " +
-      "lessons she learned. Ask me things like \"What challenge did you " +
-      "face?\", \"How did you improve your English?\", or \"What lesson " +
-      "did you learn?\""
+      "lessons she learned. Ask me things like \"What challenge did she " +
+      "face?\", \"How did she improve her English?\", or \"What lesson " +
+      "did she learn?\""
     ),
   },
 ];
@@ -329,10 +382,10 @@ const STORY_PRIORITY = ["introduction", "challenge", "emotions", "lesson", "proc
                         "background_language", "dream_goal", "choice", "help"];
 
 const STORY_FALLBACK = (
-  "Sorry, I can only answer questions that are based on the story I was " +
-  "given. I have no information about that. You can ask me about my " +
-  "background, my journey to Dhaka, the language barrier I faced, my " +
-  "feelings, how I overcame my difficulties, or the lesson I learned."
+  "Sorry, I can only answer questions that are based on Dr. Shamima Jahan's " +
+  "story. I have no information about that. You can ask about her rural " +
+  "background, her journey to Dhaka, the language barrier she faced, her " +
+  "feelings, how she overcame her difficulties, or the lesson she learned."
 );
 
 const STORY_DETAIL_WORDS = ["details", "detail", "full", "whole", "complete",
@@ -383,7 +436,8 @@ function getCustomAnswer(question) {
 
   const nq = normalize(q);
   const detailQ = SHOW_DETAILS_KEYWORDS.some((k) => nq.includes(k));
-  const wantYourself = ["about", "yourself", "who", "describe", "tell me"]
+  const wantYourself = ["about", "yourself", "who", "describe", "tell me",
+                        "her", "shamima"]
     .some((k) => q.toLowerCase().includes(k));
   if (detailQ && wantYourself) {
     const intro = CUSTOM_KNOWLEDGE.find((t) => t.label === "introduction");
@@ -439,42 +493,43 @@ function getStoryAnswer(question) {
 const BOTS = {
   custom: {
     name: "Custom",
-    title: "Ask me about Dr. Shamima Jahan's education, degrees, job, workplace, experience, subject or students.",
+    title: "Ask about Dr. Shamima Jahan's education, degrees, AI training, job, workplace, experience, subject or students.",
     suggestions: [
-      "Who are you?",
-      "Where did you complete your M.B.B.S?",
-      "What is your job position?",
-      "Where do you work?",
-      "How many years have you been working?",
-      "How many students do you get every year?",
-      "Tell me everything about yourself",
+      "Who is Dr. Shamima Jahan?",
+      "Where did she complete her M.B.B.S degree?",
+      "Where did she complete her AI training?",
+      "What is her job position?",
+      "Where does she work?",
+      "How many years has she been working?",
+      "Tell everything about her",
     ],
     ask: (text) => getCustomAnswer(text),
   },
   profile: {
     name: "Profile",
-    title: "Ask me my name, age, educational qualification, occupation, responsibility or job station.",
+    title: "Ask about her name, age, educational qualification, AI training, occupation, responsibility or job station.",
     suggestions: [
-      "What is your name?",
-      "How old are you?",
-      "What is your educational qualification?",
-      "What do you do?",
-      "What is your responsibility?",
-      "Where do you work?",
+      "What is her name?",
+      "How old is she?",
+      "What is her educational qualification?",
+      "Where did she complete her AI training?",
+      "What does she do?",
+      "What is her responsibility?",
+      "Where does she work?",
     ],
     ask: (text) => getProfileAnswer(text),
   },
   story: {
     name: "Story",
-    title: "Ask about my background, my move to Dhaka, the language barrier, my feelings, how I overcame the odds, and the lesson I learned.",
+    title: "Ask about Dr. Shamima Jahan's background, her move to Dhaka, the language barrier, her feelings, how she overcame the odds, and the lesson she learned.",
     suggestions: [
-      "Who are you?",
-      "Where are you from?",
-      "What challenge did you face?",
-      "How did you feel in your first weeks?",
-      "How did you improve your English?",
-      "What lesson did you learn?",
-      "What advice do you have?",
+      "Who is Dr. Shamima Jahan?",
+      "Where is she from?",
+      "What challenge did she face?",
+      "How did she feel in her first weeks?",
+      "How did she improve her English?",
+      "What lesson did she learn?",
+      "What advice does she have?",
     ],
     ask: (text) => getStoryAnswer(text),
   },
@@ -482,8 +537,8 @@ const BOTS = {
     name: "Groq AI",
     title: "Powered by Groq — connects to the LLM through the local server. Ask anything!",
     suggestions: [
-      "Hello, who are you?",
-      "Write a short greeting for my students.",
+      "Hello, who is Dr. Shamima Jahan?",
+      "Write a short greeting from Dr. Shamima Jahan for her students.",
       "What is physiology?",
       "Explain the heart in one paragraph.",
     ],
@@ -658,25 +713,30 @@ input.focus();
  * ------------------------------------------------------------------------- */
 function runSelfTest() {
   const tests = [
-    ["custom", "Who are you?", "I am Dr. Shamima Jahan."],
-    ["custom", "Where did you complete your M.B.B.S?", "Z.H. Sikder"],
-    ["custom", "What is your job position?", "Associate Professor"],
-    ["custom", "How many years have you been working?", "14 years"],
-    ["custom", "How many students do you get every year?", "105 students"],
-    ["custom", "Tell me everything about yourself", "M.Phil in Physiology"],
+    ["custom", "Who is Dr. Shamima Jahan?", "Associate Professor"],
+    ["custom", "Where did she complete her M.B.B.S degree?", "Z.H. Sikder"],
+    ["custom", "Where did she complete her AI training?", "AI Academy of Bangladesh"],
+    ["custom", "Is she one of the masterminds of AIAB?", "masterminds"],
+    ["custom", "Who is the founder of Dr. Jahan's AI Academy?", "founder"],
+    ["custom", "Is she the first AI trainer among the Physiologists of Bangladesh?", "first AI trainer"],
+    ["custom", "What is her job position?", "Associate Professor"],
+    ["custom", "Where does she work?", "Tairunnessa Memorial Medical College"],
+    ["custom", "How many years has she been working?", "14 years"],
+    ["custom", "Tell everything about her", "M.Phil in Physiology"],
     ["custom", "What is the capital of France?", "Sorry, I can only answer"],
-    ["profile", "What is your name?", "My name is Dr. Shamima Jahan."],
-    ["profile", "How old are you?", "44 years old"],
-    ["profile", "What is your educational qualification?", "M.B.B.S and M.Phil"],
-    ["profile", "What do you do?", "medical teaching"],
-    ["profile", "Where do you work?", "Tairunnessa Medical College"],
+    ["profile", "What is her name?", "Her name is Dr. Shamima Jahan."],
+    ["profile", "How old is she?", "44 years old"],
+    ["profile", "What is her educational qualification?", "AI training"],
+    ["profile", "Where did she complete her AI training?", "AI Academy of Bangladesh"],
+    ["profile", "What does she do?", "medical teaching"],
+    ["profile", "Where does she work?", "Tairunnessa Medical College"],
     ["profile", "What is the capital of France?", "Sorry, I can only answer"],
-    ["story", "Who are you?", "girl from a small village"],
-    ["story", "Where are you from?", "village in rural Bangladesh"],
-    ["story", "What challenge did you face?", "language barrier"],
-    ["story", "How did you improve your English?", "learning English"],
-    ["story", "What lesson did you learn?", "stepping stones to greatness"],
-    ["story", "What advice do you have?", "break through any barrier"],
+    ["story", "Who is Dr. Shamima Jahan?", "Dr. Shamima Jahan"],
+    ["story", "Where is she from?", "village in rural Bangladesh"],
+    ["story", "What challenge did she face?", "language barrier"],
+    ["story", "How did she improve her English?", "learning English"],
+    ["story", "What lesson did she learn?", "stepping stones to greatness"],
+    ["story", "What advice does she have?", "break through any barrier"],
     ["story", "What is the capital of France?", "Sorry, I can only answer"],
   ];
   const results = [];

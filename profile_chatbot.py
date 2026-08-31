@@ -30,28 +30,45 @@ KNOWLEDGE = [
     {
         "label": "name",
         "keywords": ["name", "who", "called", "your name", "introduce"],
-        "answer": "My name is Dr. Shamima Jahan.",
+        "answer": "Her name is Dr. Shamima Jahan.",
     },
     {
         "label": "age",
         "keywords": ["age", "old", "how old", "born", "year old", "44"],
-        "answer": "I am 44 years old.",
+        "answer": "She is 44 years old.",
     },
     {
         "label": "qualification",
         "keywords": ["qualification", "degree", "education", "educated",
                      "mbbs", "mphil", "m.phil", "physiology", "study", "studied",
-                     "academic", "graduated", "doctor degree", "certificate"],
+                     "academic", "graduated", "doctor degree", "certificate",
+                     "ai", "artificial intelligence"],
         "answer": (
-            "My educational qualification is M.B.B.S and M.Phil in Physiology."
+            "Her educational qualifications are M.B.B.S, M.Phil in "
+            "Physiology, and AI training from the AI Academy of Bangladesh."
+        ),
+    },
+    {
+        "label": "ai",
+        "keywords": ["ai", "artificial intelligence", "a i", "ai training",
+                     "aiab", "academy of bangladesh", "ai academy",
+                     "mastermind", "founder", "dr jahan", "dr jahans",
+                     "ai trainer", "first ai trainer", "physiologist",
+                     "training"],
+        "answer": (
+            "She has completed her AI training under the AI Academy of "
+            "Bangladesh (AIAB). She is one of the masterminds of AIAB, the "
+            "founder of Dr. Jahan's AI Academy, and the first AI trainer "
+            "among the Physiologists of Bangladesh."
         ),
     },
     {
         "label": "occupation",
         "keywords": ["occupation", "job", "profession", "work", "do you do",
-                     "professionally", "career", "employment", "role", "earning",
+                     "what does she do", "does she do", "professionally",
+                     "career", "employment", "role", "earning",
                      "teaching", "teacher", "lecture"],
-        "answer": "My occupation is medical teaching.",
+        "answer": "Her occupation is medical teaching.",
     },
     {
         "label": "responsibility",
@@ -59,27 +76,30 @@ KNOWLEDGE = [
                      "teach", "lecture", "class", "students", "take", "classes",
                      "responsibilities", "day"],
         "answer": (
-            "My responsibility is to take the lecture class to the first year "
+            "Her responsibility is to take the lecture class to the first year "
             "medical students."
         ),
     },
     {
         "label": "jobstation",
         "keywords": ["job station", "jobstation", "workplace", "college",
-                     "institution", "where do you work", "university", "gazipur",
-                     "tairunnessa", "hospital", "organization", "employer"],
+                     "institution", "where do you work", "where does she work",
+                     "where do she work", "does she work", "university",
+                     "gazipur", "tairunnessa", "hospital", "organization",
+                     "employer"],
         "answer": (
-            "My job station is Tairunnessa Medical College, Gazipur."
+            "Her job station is Tairunnessa Medical College, Gazipur."
         ),
     },
 ]
-PRIORITY = ["name", "age", "qualification", "jobstation", "occupation",
+PRIORITY = ["name", "age", "qualification", "ai", "jobstation", "occupation",
             "responsibility"]
 
 FALLBACK = (
-    "Sorry, I can only answer questions that are based on the profile I was "
-    "given. I have no information about that. You can ask me my name, age, "
-    "educational qualification, occupation, responsibility, or job station."
+    "Sorry, I can only answer questions that are based on Dr. Shamima Jahan's "
+    "profile. I have no information about that. You can ask about her name, "
+    "age, educational qualification, AI training, occupation, responsibility, "
+    "or job station."
 )
 
 
@@ -145,7 +165,7 @@ class ChatApp:
 
         self._add_line("Dr. Shamima Jahan - Profile Chatbot", "title")
         self._add_line(
-            "Ask me my name, age, educational qualification, occupation, "
+            "Ask about her name, age, educational qualification, occupation, "
             "responsibility or job station.", "hint",
         )
 
@@ -222,14 +242,16 @@ class ChatApp:
 # Entry point -----------------------------------------------------------------
 # ---------------------------------------------------------------------------
 TEST_QUESTIONS = [
-    "What is your name?",
-    "How old are you?",
-    "What is your educational qualification?",
-    "What do you do?",
-    "What is your occupation?",
-    "What is your responsibility?",
-    "Where do you work?",
-    "What is your job station?",
+    "What is her name?",
+    "How old is she?",
+    "What is her educational qualification?",
+    "Where did she complete her AI training?",
+    "Is she one of the masterminds of AIAB?",
+    "What does she do?",
+    "What is her occupation?",
+    "What is her responsibility?",
+    "Where does she work?",
+    "What is her job station?",
     "What is the capital of France?",
 ]
 

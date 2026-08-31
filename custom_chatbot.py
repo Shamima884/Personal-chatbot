@@ -23,26 +23,35 @@ import tkinter as tk
 KNOWLEDGE = [
     {
         "label": "introduction",
-        "keywords": ["introduce", "about", "who are you", "tell me", "yourself",
-                     "describe", "bio", "profile", "background"],
-        "answer": "I am Dr. Shamima Jahan.",
+        "keywords": ["introduce", "about", "who are you", "who is", "tell me",
+                     "yourself", "describe", "bio", "profile", "background",
+                     "shamima", "shamima jahan", "dr shamima jahan"],
+        "answer": (
+            "Dr. Shamima Jahan is an Associate Professor in the Physiology "
+            "department at Tairunnessa Memorial Medical College, Gazipur."
+        ),
         "details": (
-            "I am Dr. Shamima Jahan. I completed my M.B.B.S from Z.H. Sikder "
-            "Women's Medical College under Dhaka University. I completed my "
-            "postgraduate M.Phil in Physiology under B.S.M.M.U. I have been "
-            "working as an Associate Professor in the Physiology department at "
-            "Tairunnessa Memorial Medical College, Gazipur for the last 14 "
-            "years. Every year I have 105 students."
+            "Dr. Shamima Jahan is an Associate Professor in the Physiology "
+            "department at Tairunnessa Memorial Medical College, Gazipur. She "
+            "completed her M.B.B.S from Z.H. Sikder Women's Medical College "
+            "under Dhaka University and her postgraduate M.Phil in Physiology "
+            "under B.S.M.M.U. She has been working as a medical teacher for "
+            "the last 14 years, and every year she has 105 students. She has "
+            "also completed her AI training under the AI Academy of Bangladesh "
+            "(AIAB) and is one of the masterminds of AIAB. She is the founder "
+            "of Dr. Jahan's AI Academy and the first AI trainer among the "
+            "Physiologists of Bangladesh."
         ),
     },
     {
         "label": "mbbs",
-        "keywords": ["mbbs", "medical college", "bachelor", "undergraduate",
-                     "under graduate", "first degree", "medicine degree",
-                     "medical degree", "z.h. sikder", "z h sikder"],
+        "keywords": ["mbbs", "mbbs degree", "her mbbs", "medical college",
+                     "bachelor", "undergraduate", "under graduate",
+                     "first degree", "medicine degree", "medical degree",
+                     "degree", "z.h. sikder", "z h sikder"],
         "answer": (
-            "I completed my M.B.B.S from Z.H. Sikder Women's Medical College "
-            "under Dhaka University."
+            "She completed her M.B.B.S degree from Z.H. Sikder Women's Medical "
+            "College under Dhaka University."
         ),
     },
     {
@@ -51,26 +60,30 @@ KNOWLEDGE = [
                      "higher study", "higher education", "masters", "master",
                      "fellowship", "specialization", "b.s.m.m.u", "bsmmu"],
         "answer": (
-            "I completed my postgraduate M.Phil in Physiology under B.S.M.M.U."
+            "She completed her postgraduate M.Phil in Physiology under B.S.M.M.U."
         ),
     },
     {
         "label": "position",
         "keywords": ["position", "designation", "job", "role", "post",
-                     "professor", "prof.", "title", "rank", "status"],
+                     "professor", "prof.", "title", "rank", "status",
+                     "what is her job", "her job", "her position",
+                     "her job position"],
         "answer": (
-            "I work as an Associate Professor in the Physiology department at "
-            "Tairunnessa Memorial Medical College, Gazipur."
+            "Her job position is Associate Professor in the Physiology "
+            "department at Tairunnessa Memorial Medical College, Gazipur."
         ),
     },
     {
         "label": "institution",
         "keywords": ["institution", "college", "university", "workplace",
-                     "where do you work", "where you work", "school",
-                     "tairunnessa", "memorial", "gazipur", "organization",
-                     "employer", "place"],
+                     "where do you work", "where you work", "where does she work",
+                     "where do she work", "where do she works", "does she work",
+                     "she works", "where she work", "shamima work",
+                     "does shamima work", "school", "tairunnessa", "memorial",
+                     "gazipur", "organization", "employer", "place"],
         "answer": (
-            "I work at Tairunnessa Memorial Medical College, Gazipur, as an "
+            "She works at Tairunnessa Memorial Medical College, Gazipur, as an "
             "Associate Professor in the Physiology department."
         ),
     },
@@ -79,15 +92,17 @@ KNOWLEDGE = [
         "keywords": ["subject", "specialty", "speciality", "physiology",
                      "department", "teach", "teaching", "field", "subject matter"],
         "answer": (
-            "My subject / department is Physiology."
+            "Her subject / department is Physiology."
         ),
     },
     {
         "label": "experience",
-        "keywords": ["experience", "how long", "14 years", "years", "seniority",
+        "keywords": ["experience", "how long", "how many years", "14 years",
+                     "years", "been working", "she has been working",
+                     "has she been working", "she been working", "seniority",
                      "since", "tenure", "duration", "career"],
         "answer": (
-            "I have been working for the last 14 years as Associate Professor "
+            "She has been working for the last 14 years as Associate Professor "
             "in the Physiology department at Tairunnessa Memorial Medical "
             "College, Gazipur."
         ),
@@ -95,9 +110,24 @@ KNOWLEDGE = [
     {
         "label": "students",
         "keywords": ["student", "students", "how many students", "batch",
-                     "pupil", "admission", "enroll", "class size", "105"],
+                     "pupil", "admission", "enroll", "class size", "105",
+                     "she gets", "her students"],
         "answer": (
-            "Every year I get 105 students."
+            "Every year she gets 105 students."
+        ),
+    },
+    {
+        "label": "ai_qualifications",
+        "keywords": ["ai", "artificial intelligence", "a i", "ai training",
+                     "aiab", "academy of bangladesh", "ai academy",
+                     "mastermind", "founder", "dr jahan", "dr jahans",
+                     "ai trainer", "first ai trainer", "physiologist",
+                     "training"],
+        "answer": (
+            "She has completed her AI training under the AI Academy of "
+            "Bangladesh (AIAB). She is one of the masterminds of AIAB, the "
+            "founder of Dr. Jahan's AI Academy, and the first AI trainer "
+            "among the Physiologists of Bangladesh."
         ),
     },
     {
@@ -106,9 +136,10 @@ KNOWLEDGE = [
                      "options", "about you"],
         "answer": (
             "I can tell you about Dr. Shamima Jahan's education, qualifications, "
-            "job position, workplace, experience, subject and students. "
-            "For example, ask: \"What is your name?\", \"Where did you study "
-            "M.B.B.S?\", \"What is your job?\", or \"How many students do you have?\""
+            "AI training, job position, workplace, experience, subject and "
+            "students. For example, ask: \"Who is Dr. Shamima Jahan?\", "
+            "\"Where did she complete her M.B.B.S degree?\", \"Where did she "
+            "complete her AI training?\", or \"What is her job position?\""
         ),
     },
 ]
@@ -116,17 +147,18 @@ KNOWLEDGE = [
 # Topics whose keywords overlap heavily; give these a boost so a specific
 # question (e.g. about the workplace) is not swallowed by a general topic.
 TOPIC_PRIORITY = ["introduction", "institution", "postgraduate", "position",
-                  "mbbs", "students", "experience", "subject", "help"]
+                  "mbbs", "students", "experience", "subject",
+                  "ai_qualifications", "help"]
 
 FALLBACK = (
     "Sorry, I can only answer questions that are based on the information "
     "provided about Dr. Shamima Jahan. I have no information about that. "
-    "You can ask me about her education, degrees, job, workplace, subject, "
-    "or her students."
+    "You can ask me about her education, degrees, AI training, job, "
+    "workplace, subject, or her students."
 )
 
-SHOW_DETAILS_KEYWORDS = ["detail", "more detail", "full", "complete",
-                         "everything", "all about", "describe yourself"]
+SHOW_DETAILS_KEYWORDS = ["detail", "more detail", "full", "everything",
+                         "all about", "describe yourself", "tell me about"]
 # ---------------------------------------------------------------------------
 # Matching / answering logic -------------------------------------------------
 # ---------------------------------------------------------------------------
@@ -160,7 +192,8 @@ def get_answer(question):
     # together with a general who/describe query.
     detail_q = any(k in normalize(q) for k in SHOW_DETAILS_KEYWORDS)
     want_yourself = any(k in q.lower() for k in ["about", "yourself", "who",
-                                                 "describe", "tell me"])
+                                                 "describe", "tell me", "her",
+                                                 "shamima"])
     if detail_q and want_yourself:
         intro = next(t for t in KNOWLEDGE if t["label"] == "introduction")
         return intro["details"]
@@ -285,14 +318,18 @@ class ChatApp:
 # Entry point -----------------------------------------------------------------
 # ---------------------------------------------------------------------------
 DEFAULT_TEST_QUESTIONS = [
-    "Who are you?",
-    "Where did you complete your M.B.B.S?",
-    "What is your postgraduate degree?",
-    "What is your job position?",
-    "Where do you work?",
-    "What is your subject?",
-    "How many years have you been working?",
-    "How many students do you get every year?",
+    "Who is Dr. Shamima Jahan?",
+    "Where did she complete her M.B.B.S degree?",
+    "Where did she complete her AI training?",
+    "Is she one of the masterminds of AIAB?",
+    "Who is the founder of Dr. Jahan's AI Academy?",
+    "Is she the first AI trainer among the Physiologists of Bangladesh?",
+    "What is her job position?",
+    "Where does she work?",
+    "How many years has she been working?",
+    "Tell everything about her",
+    "What is her subject?",
+    "How many students does she get every year?",
     "What is the capital of France?",
 ]
 
