@@ -9,5 +9,15 @@ webapp/.chrome-tmp/
 # Local push error log.
 push_ssh_out.txt
 
+# Local test/debug output artifacts.
+assets_test.txt
+compile_ok.txt
+custom_selftest.txt
+py_check.txt
+server_err.txt
+server_out.txt
+server_start_check.txt
+server_test.txt
+
 # Local server runtime logs.
 webapp/server_*.log

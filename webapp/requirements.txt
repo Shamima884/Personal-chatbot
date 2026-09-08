@@ -1,2 +1,4 @@
-# This app uses only the Python standard library (http.server + urllib).
-# The build step stays a no-op.
+# The core web app uses only the Python standard library (http.server + urllib).
+# Optional: PostgreSQL driver for persisting chat history (see README).
+#   pip install -r requirements.txt
+psycopg[binary]>=3.1

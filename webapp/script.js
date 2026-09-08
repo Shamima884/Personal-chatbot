@@ -548,11 +548,23 @@ const BOTS = {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages }),
+        body: JSON.stringify({
+          messages,
+          bot: "main",
+          session_id: isServerId(chat.current.main) ? chat.current.main : null,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || "Server error " + res.status);
+      }
+      if (data.session) {
+        // Adopt the server session so the drawer shows it too.
+        upsertLocalSession(data.session, [
+          ...(chat.HISTORY.main || []),
+          { role: "user", content: text },
+          { role: "assistant", content: data.reply },
+        ]);
       }
       return data.reply;
     },
@@ -562,6 +574,8 @@ const BOTS = {
 const chat = {
   active: "custom",
   HISTORY: { custom: [], profile: [], story: [], main: [] },
+  sessions: [],   // [{id, bot, title, created_at, updated_at, message_count, messages[]}]
+  current: {},    // bot id -> active session id
   busy: false,
 };
 
@@ -572,6 +586,11 @@ const input = document.getElementById("message");
 const sendBtn = document.getElementById("send-btn");
 const tabsEl = document.getElementById("tabs");
 const suggestionsEl = document.getElementById("suggestions");
+const drawerEl = document.getElementById("drawer");
+const drawerBackdrop = document.getElementById("drawer-backdrop");
+const drawerCloseBtn = document.getElementById("drawer-close");
+const newChatBtn = document.getElementById("new-chat-btn");
+const sessionListEl = document.getElementById("session-list");
 /* ---------- Rendering ---------- */
 function scrollToBottom() {
   chatEl.scrollTop = chatEl.scrollHeight;
@@ -654,6 +673,7 @@ function switchBot(botId) {
   });
   renderHistory(botId);
   renderSuggestions();
+  renderDrawer();
   input.focus();
 }
 
@@ -667,13 +687,23 @@ async function sendMessage() {
   addMessage(text, "user");
   chat.HISTORY[chat.active].push({ role: "user", content: text });
 
+  const bot = chat.active;
   const typingEl = addTyping();
   try {
-    const reply = await BOTS[chat.active].ask(text);
+    const reply = await BOTS[bot].ask(text);
     removeTyping();
     if (!reply) throw new Error("Empty reply.");
     addMessage(reply, "bot");
-    chat.HISTORY[chat.active].push({ role: "assistant", content: reply });
+    chat.HISTORY[bot].push({ role: "assistant", content: reply });
+    if (bot !== "main") {
+      // The offline bots only know their answers client-side, so we save
+      // the exchange to the history drawer (and to the server/PostgreSQL
+      // when available).
+      persistExchange(bot, [
+        { role: "user", content: text },
+        { role: "assistant", content: reply },
+      ]);
+    }
   } catch (err) {
     removeTyping();
     addMessage(
@@ -689,10 +719,312 @@ async function sendMessage() {
   }
 }
 
+/* ============================================================
+ * 6. History drawer + persistence (PostgreSQL via the server,
+ *    with a localStorage mirror so the drawer works offline)
+ * ============================================================ */
+const LOCAL_KEY = "shamima-chatbot-history-v1";
+let serverOk = true;
+let sessionSeq = 0;
+
+function nextLocalId() {
+  sessionSeq += 1;
+  return "L" + Date.now() + "-" + sessionSeq;
+}
+
+function isServerId(id) {
+  return id !== null && id !== undefined && /^\d+$/.test(String(id));
+}
+
+function findSession(id) {
+  return chat.sessions.find((s) => String(s.id) === String(id));
+}
+
+function botMeta(bot) {
+  return {
+    custom: { label: "Custom", cls: "b-custom" },
+    profile: { label: "Profile", cls: "b-profile" },
+    story: { label: "Story", cls: "b-story" },
+    main: { label: "Groq AI", cls: "b-main" },
+  }[bot] || { label: bot || "Chat", cls: "b-custom" };
+}
+
+function formatTime(iso) {
+  if (!iso) return "";
+  const t = new Date(iso).getTime();
+  if (Number.isNaN(t)) return "";
+  const diffSec = (Date.now() - t) / 1000;
+  if (diffSec < 60) return "now";
+  if (diffSec < 3600) return Math.floor(diffSec / 60) + "m";
+  if (diffSec < 86400) return Math.floor(diffSec / 3600) + "h";
+  if (diffSec < 604800) return Math.floor(diffSec / 86400) + "d";
+  const d = new Date(t);
+  return (d.getMonth() + 1) + "/" + d.getDate();
+}
+
+/* ---------- localStorage mirror ---------- */
+function saveLocal() {
+  try {
+    const copy = chat.sessions.slice(0, 50).map((s) => ({
+      id: s.id, bot: s.bot, title: s.title,
+      created_at: s.created_at, updated_at: s.updated_at,
+      message_count: s.message_count, messages: s.messages,
+    }));
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(copy));
+  } catch {
+    /* storage full / unavailable — ignore */
+  }
+}
+
+function loadLocal() {
+  try {
+    const arr = JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]");
+    if (Array.isArray(arr)) chat.sessions = arr;
+  } catch {
+    /* ignore */
+  }
+}
+
+/* ---------- API helpers ---------- */
+async function apiGet(path) {
+  const res = await fetch(path, { headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return res.json();
+}
+
+async function apiPost(path, body) {
+  const res = await fetch(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return res.json();
+}
+
+async function apiDelete(path) {
+  const res = await fetch(path, { method: "DELETE" });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return res.json();
+}
+
+/* ---------- Session bookkeeping ---------- */
+function upsertLocalSession(sess, messages) {
+  const existing = findSession(sess.id);
+  if (existing) {
+    Object.assign(existing, sess);
+    if (messages) existing.messages = messages;
+    return existing;
+  }
+  const fresh = Object.assign({}, sess);
+  fresh.messages = messages || [];
+  chat.sessions.unshift(fresh);
+  return fresh;
+}
+
+function ensureSessionFor(bot) {
+  const sid = chat.current[bot];
+  if (sid && findSession(sid)) return sid;
+  const now = new Date().toISOString();
+  const id = nextLocalId();
+  chat.sessions.unshift({
+    id, bot, title: "New chat", created_at: now, updated_at: now,
+    message_count: 0, messages: [],
+  });
+  chat.current[bot] = id;
+  return id;
+}
+
+function persistExchange(bot, exchange) {
+  const sid = ensureSessionFor(bot);
+  const session = findSession(sid);
+  session.messages.push(...exchange);
+  session.message_count = session.messages.length;
+  session.updated_at = new Date().toISOString();
+  if (session.title === "New chat") {
+    const firstUser = exchange.find((m) => m.role === "user");
+    if (firstUser && firstUser.content) {
+      session.title = firstUser.content.replace(/\s+/g, " ").trim().slice(0, 60) || "New chat";
+    }
+  }
+  saveLocal();
+  renderDrawer();
+
+  if (!serverOk) return;
+  apiPost("/api/history/messages", {
+    bot,
+    session_id: isServerId(sid) ? sid : null,
+    messages: exchange,
+  })
+    .then((data) => {
+      if (data && data.session) {
+        const serverSession = data.session;
+        const local = findSession(sid);
+        if (local) Object.assign(local, serverSession);
+        // The old local id is now replaced by the server session id.
+        if (chat.current[bot] === sid) chat.current[bot] = serverSession.id;
+        saveLocal();
+        renderDrawer();
+      }
+    })
+    .catch(() => {
+      serverOk = false;
+      saveLocal();
+      renderDrawer();
+    });
+}
+
+/* ---------- Drawer UI ---------- */
+function openDrawer() {
+  renderDrawer();
+  drawerEl.classList.add("open");
+  drawerBackdrop.hidden = false;
+}
+
+function closeDrawer() {
+  drawerEl.classList.remove("open");
+  drawerBackdrop.hidden = true;
+}
+
+function toggleDrawer() {
+  if (drawerEl.classList.contains("open")) closeDrawer();
+  else openDrawer();
+}
+
+function renderDrawer() {
+  sessionListEl.innerHTML = "";
+  const sorted = [...chat.sessions]
+    .sort((a, b) => String(b.updated_at || "").localeCompare(String(a.updated_at || "")));
+  if (sorted.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "session-empty";
+    empty.textContent =
+      "No conversations yet.\nStart chatting below — your history will " +
+      "appear here and is saved to PostgreSQL (when configured).";
+    sessionListEl.appendChild(empty);
+    return;
+  }
+  for (const ses of sorted) {
+    const meta = botMeta(ses.bot);
+    const item = document.createElement("div");
+    item.className = "session-item";
+    if (String(chat.current[chat.active]) === String(ses.id)) {
+      item.classList.add("active");
+    }
+    item.addEventListener("click", () => openSession(ses.id));
+
+    const badge = document.createElement("span");
+    badge.className = "badge " + meta.cls;
+    badge.textContent = meta.label;
+
+    const title = document.createElement("span");
+    title.className = "session-title";
+    title.textContent = ses.title || "New chat";
+
+    const when = document.createElement("span");
+    when.className = "session-meta";
+    when.textContent = formatTime(ses.updated_at);
+
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "session-delete";
+    del.title = "Delete this conversation";
+    del.setAttribute("aria-label", "Delete conversation");
+    del.textContent = "✕";
+    del.addEventListener("click", (e) => {
+      e.stopPropagation();
+      deleteSession(ses.id);
+    });
+
+    item.append(badge, title, when, del);
+    sessionListEl.appendChild(item);
+  }
+}
+
+/* ---------- Session actions ---------- */
+async function loadSessions() {
+  try {
+    const data = await apiGet("/api/history");
+    serverOk = true;
+    for (const meta of data.sessions || []) {
+      const existing = findSession(meta.id);
+      if (existing) Object.assign(existing, meta);   // keep cached messages
+      else chat.sessions.push(Object.assign({}, meta, { messages: [] }));
+    }
+  } catch {
+    serverOk = false;
+    loadLocal();
+  }
+  saveLocal();
+  renderDrawer();
+}
+
+async function openSession(id) {
+  let session = findSession(id);
+  if (!session && serverOk) {
+    try {
+      const data = await apiGet("/api/history/" + id);
+      if (data && data.session) session = data.session;
+    } catch {
+      serverOk = false;
+    }
+  }
+  if (!session) return;
+  upsertLocalSession(session, session.messages || []);
+  chat.HISTORY[session.bot] = (session.messages || [])
+    .map((m) => ({ role: m.role, content: m.content }));
+  chat.current[session.bot] = session.id;
+  switchBot(session.bot);
+  closeDrawer();
+}
+
+function newChat() {
+  const bot = chat.active;
+  chat.HISTORY[bot] = [];
+  chat.current[bot] = null;
+  renderHistory(bot);
+  renderSuggestions();
+  renderDrawer();
+  closeDrawer();
+  input.focus();
+}
+
+async function deleteSession(id) {
+  const removed = findSession(id);
+  chat.sessions = chat.sessions.filter((s) => String(s.id) !== String(id));
+  if (removed && String(chat.current[removed.bot]) === String(id)) {
+    chat.current[removed.bot] = null;
+    chat.HISTORY[removed.bot] = [];
+  }
+  saveLocal();
+  renderDrawer();
+  renderHistory(chat.active);
+  if (serverOk && isServerId(id)) {
+    try {
+      await apiDelete("/api/history/" + id);
+    } catch {
+      serverOk = false;
+    }
+  }
+}
+
+/* ---------- History drawer wire-up ---------- */
+drawerCloseBtn.addEventListener("click", closeDrawer);
+drawerBackdrop.addEventListener("click", closeDrawer);
+newChatBtn.addEventListener("click", newChat);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeDrawer();
+});
+
 /* ---------- Wire-up ---------- */
 tabsEl.addEventListener("click", (e) => {
   const btn = e.target.closest(".tab");
-  if (btn && !btn.classList.contains("active")) {
+  if (!btn) return;
+  if (btn.dataset && btn.dataset.drawer) {
+    toggleDrawer();
+    return;
+  }
+  if (!btn.classList.contains("active")) {
     switchBot(btn.dataset.bot);
   }
 });
@@ -706,6 +1038,7 @@ form.addEventListener("submit", (e) => {
 renderHistory(chat.active);
 renderSuggestions();
 input.focus();
+loadSessions();   // populate the history drawer (server or local fallback)
 
 /* ---------------------------------------------------------------------------
  * Console self-test -- mirrors the --selftest of the Python chatbots.
@@ -748,6 +1081,25 @@ function runSelfTest() {
     const ok = answer.toLowerCase().includes(expected.toLowerCase());
     results.push((ok ? "PASS " : "FAIL ") + "[" + bot + "] " +
                  question + " => " + answer.split("\n")[0]);
+  }
+  // Drawer wiring sanity (no network calls).
+  try {
+    const drawerOk =
+      (drawerEl !== null) + "," +
+      (sessionListEl !== null) + "," +
+      (drawerBackdrop !== null) + "," +
+      (newChatBtn !== null) + "," +
+      (botMeta("story").label === "Story") + "," +
+      (isServerId("12") && !isServerId("L1")) + "," +
+      (formatTime("") === "") + "," +
+      (typeof renderDrawer === "function");
+    results.push("DRAWER " + (drawerOk === "true,true,true,true,true,true,true,true"
+                  ? "PASS" : "CHECK ") + "  [" + drawerOk + "]");
+    ensureSessionFor("custom");
+    results.push("SESSION " + (findSession(chat.current.custom)
+                  ? "PASS  [ensureSessionFor + findSession]" : "FAIL"));
+  } catch (err) {
+    results.push("DRAWER-HARNESS FAIL " + err.message);
   }
   const fails = results.filter((r) => r.startsWith("FAIL")).length;
   const pre = document.createElement("pre");
