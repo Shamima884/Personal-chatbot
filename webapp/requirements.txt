@@ -1,4 +1,8 @@
-# The core web app uses only the Python standard library (http.server + urllib).
+# CrewAI agents power the AI chat tab (crew_agent.py). No API key stored.
+crewai>=1.15
+langchain-groq>=1.1
+langchain-ollama>=1.1
+
 # Optional: PostgreSQL driver for persisting chat history (see README).
 #   pip install -r requirements.txt
 psycopg[binary]>=3.1

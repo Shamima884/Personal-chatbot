@@ -6,9 +6,10 @@ A browser version of the four tkinter chatbots in this project
 - **Custom / Profile / Story** tabs run entirely in JavaScript (the same
   knowledge bases and keyword-matching logic as the Python bots — no server
   round-trip, no API needed).
-- **Groq AI** tab talks to the Python local server, which proxies messages
-  to the Groq API using the `API_KEY` from the project's `.env` file. The API
-  key never reaches the browser.
+- **Groq AI** tab talks to the Python local server, which answers through a
+  **CrewAI agent** (`crew_agent.py`). No API key is stored in the project:
+  Groq is used when `GROQ_API_KEY` is set (e.g. on Render), otherwise a
+  local Ollama server handles it — fully key-less.
 - **History drawer** — the **☰ History** button opens a slide-out panel with
   every conversation. Click a conversation to reopen it, **✕** deletes it,
   **＋ New chat** starts a fresh conversation. History is stored in
@@ -33,8 +34,10 @@ To use a different port:
 python server.py 9000
 ```
 
-> The Groq AI tab needs a valid `API_KEY` in the `.env` file in the project
-> root (one folder above `webapp`). The other three tabs work offline.
+> The Groq AI tab is answered by a CrewAI agent. Install Ollama
+> (https://ollama.com) and run it for a key-less setup, or set the
+> `GROQ_API_KEY` env var (Render does this for you). The other three tabs
+> work offline.
 
 ## History drawer
 
@@ -74,7 +77,7 @@ automatically — the server picks it up on start.
 
 | Endpoint                 | Method | Purpose                             |
 | ------------------------ | ------ | ----------------------------------- |
-| `/api/chat`              | POST   | Groq chat; also saves the exchange  |
+| `/api/chat`              | POST   | CrewAI chat; also saves the exchange |
 | `/api/history`           | GET    | List conversation sessions          |
 | `/api/history`           | POST   | Create an empty session             |
 | `/api/history/<id>`      | GET    | One session with its messages       |
@@ -88,4 +91,4 @@ automatically — the server picks it up on start.
 | `index.html`  | Page structure and layout (incl. the history drawer)  |
 | `style.css`   | Styling for the chat UI and the drawer                |
 | `script.js`   | Chatbots + matching engine + UI + drawer logic        |
-| `server.py`   | Static files + `/api/chat` Groq proxy + history API (PostgreSQL or memory) |
+| `server.py`   | Static files + `/api/chat` CrewAI engine + history API (PostgreSQL or memory) |

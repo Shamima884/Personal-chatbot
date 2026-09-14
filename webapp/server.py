@@ -3,15 +3,17 @@ Local web server for the "Dr. Shamima Jahan" chatbot web app.
 
 - Serves the static frontend (index.html / style.css / script.js) from this
   folder.
-- POST /api/chat              -> Groq chat (also persists the exchange)
+- POST /api/chat              -> CrewAI chat (also persists the exchange)
 - GET  /api/history           -> list saved conversations (for the drawer)
 - GET  /api/history/<id>      -> one conversation with its messages
 - POST /api/history           -> create an empty conversation
 - POST /api/history/messages  -> save an exchange (offline tab bots)
 - DELETE /api/history/<id>    -> delete a conversation
 
-The Groq proxy logic is the same as main.py, so the API key stays in the
-.env file and never reaches the browser.
+The answer is produced by a CrewAI agent (crew_agent.py). No API key is
+stored in the project: Groq is used when GROQ_API_KEY is set (e.g. the
+Render env var), otherwise a local Ollama server — so the browser never
+sees any key.
 
 Optional PostgreSQL persistence:
 - Set DATABASE_URL (in the environment or in the .env files) to a
@@ -30,9 +32,6 @@ import json
 import os
 import sys
 import threading
-import time
-import urllib.error
-import urllib.request
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
@@ -52,17 +51,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(BASE_DIR)  # the folder that holds .env
 DEFAULT_PORT = 8000
 
-API_BASE = "https://api.groq.com/openai/v1/chat/completions"
-DEFAULT_MODEL = "qwen/qwen3.8-27b"
-MAX_RETRIES = 4
-RETRY_DELAY = 2.0
-
-# Groq / its WAF rejects the default "Python-urllib" User-Agent (403).
-BROWSER_HEADERS = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0",
-}
+# The CrewAI agent engine lives in the project root (crew_agent.py).
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+from crew_agent import crew_chat  # noqa: E402
 
 MIME_TYPES = {
     ".html": "text/html; charset=utf-8",
@@ -97,62 +89,6 @@ def load_env(path):
     return values
 
 
-def get_api_key():
-    # Cloud platforms (Render, etc.) inject the key via environment variables.
-    env_key = os.environ.get("API_KEY", "").strip()
-    if env_key:
-        return env_key
-    for path in (os.path.join(PROJECT_ROOT, ".env"),
-                 os.path.join(BASE_DIR, ".env")):
-        key = load_env(path).get("API_KEY", "").strip()
-        if key:
-            return key
-    return ""
-
-
-# ---------------------------------------------------------------------------
-# Groq API call (mirrors main.py)
-# ---------------------------------------------------------------------------
-def chat_completion(messages, model=DEFAULT_MODEL, api_key=None):
-    """Send one request to Groq and return the assistant's reply text."""
-    api_key = api_key if api_key is not None else get_api_key()
-    if not api_key:
-        raise RuntimeError(
-            "API_KEY not found. Add it to the .env file in the project folder."
-        )
-
-    headers = dict(BROWSER_HEADERS)
-    headers["Authorization"] = "Bearer " + api_key
-
-    body = json.dumps(
-        {"model": model, "messages": messages, "max_tokens": 800}
-    ).encode("utf-8")
-
-    last_error = None
-    for attempt in range(1, MAX_RETRIES + 1):
-        try:
-            request = urllib.request.Request(API_BASE, data=body, headers=headers)
-            with urllib.request.urlopen(request, timeout=60) as response:
-                payload = json.loads(response.read().decode("utf-8"))
-            return payload["choices"][0]["message"]["content"].strip()
-        except urllib.error.HTTPError as exc:
-            detail = ""
-            try:
-                detail = exc.read().decode("utf-8", "replace")
-            except Exception:
-                pass
-            raise RuntimeError(
-                f"Groq API error {exc.code} {exc.reason}. "
-                f"Detail: {detail or '(none)'}"
-            ) from exc
-        except (urllib.error.URLError, ConnectionError, OSError) as exc:
-            last_error = exc
-            if attempt < MAX_RETRIES:
-                time.sleep(RETRY_DELAY)
-
-    raise RuntimeError(
-        f"Could not reach the Groq API after {MAX_RETRIES} tries: {last_error}"
-    )
 # ---------------------------------------------------------------------------
 # Storage layer — PostgreSQL (psycopg) with an in-memory fallback
 #
@@ -548,7 +484,7 @@ class Handler(BaseHTTPRequestHandler):
             bot = data.get("bot") or "main"
             session_id = data.get("session_id")
             try:
-                reply = chat_completion(messages)
+                reply = crew_chat(messages)
             except Exception as exc:
                 self._send(500, json.dumps({"error": str(exc)}))
                 return

@@ -1,7 +1,9 @@
 """
-Chatbot with a GUI (tkinter) that talks to Groq's API.
+Chatbot with a GUI (tkinter) whose AI answers come from CrewAI agents.
 
-- Reads API_KEY from .env (no external packages required).
+- The chat reply is produced by a CrewAI agent (crew_agent.py). No API key
+  is stored in the project: Groq is used when GROQ_API_KEY is set, and a
+  local Ollama server otherwise (fully key-less).
 - GUI is built with Python's built-in tkinter.
 - The chat request runs in a background thread so the UI never freezes.
 
@@ -10,116 +12,20 @@ Usage:
     python main.py --selftest # print one reply to the console (no GUI)
 """
 
-import json
 import os
 import sys
 import threading
-import time
 import tkinter as tk
-import urllib.error
-import urllib.request
+
+from crew_agent import crew_chat
 
 # ---------------------------------------------------------------------------
-# Configuration
-# ---------------------------------------------------------------------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ENV_PATH = os.path.join(BASE_DIR, ".env")
-API_BASE = "https://api.groq.com/openai/v1/chat/completions"
-
-# A model that is currently available on Groq. Change to any model you like.
-DEFAULT_MODEL = "qwen/qwen3.8-27b"
-MAX_RETRIES = 4
-RETRY_DELAY = 2.0
-
-# A browser-style User-Agent is required -- Groq / its WAF rejects the
-# default "Python-urllib" User-Agent with a 403 error.
-BROWSER_HEADERS = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0",
-}
-
-# ---------------------------------------------------------------------------
-# .env handling (no python-dotenv dependency)
-# ---------------------------------------------------------------------------
-def load_env(path=ENV_PATH):
-    """Return a dict of KEY=VALUE pairs parsed from a simple .env file."""
-    values = {}
-    if os.path.exists(path):
-        with open(path, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith("#") or "=" not in line:
-                    continue
-                k, _, v = line.partition("=")
-                values[k.strip()] = v.strip()
-    return values
-
-
-def get_api_key():
-    try:
-        return load_env().get("API_KEY", "").strip()
-    except Exception:
-        return ""
-# ---------------------------------------------------------------------------
-# Groq API call (the request is retried because connections sometimes drop).
-# ---------------------------------------------------------------------------
-def chat_completion(messages, model=DEFAULT_MODEL, api_key=None):
-    """Send one request to Groq and return the assistant's reply text.
-
-    Raises RuntimeError if the request ultimately fails.
-    """
-    api_key = api_key if api_key is not None else get_api_key()
-    if not api_key:
-        raise RuntimeError(
-            "API_KEY not found. Add it to the .env file in the project folder."
-        )
-
-    headers = dict(BROWSER_HEADERS)
-    headers["Authorization"] = "Bearer " + api_key
-
-    body = json.dumps(
-        {"model": model, "messages": messages, "max_tokens": 800}
-    ).encode("utf-8")
-
-    last_error = None
-    for attempt in range(1, MAX_RETRIES + 1):
-        try:
-            request = urllib.request.Request(API_BASE, data=body, headers=headers)
-            with urllib.request.urlopen(request, timeout=60) as response:
-                payload = json.loads(response.read().decode("utf-8"))
-            return payload["choices"][0]["message"]["content"].strip()
-        except urllib.error.HTTPError as exc:
-            # A real API problem: bad key, bad model, or rate limiting.
-            detail = ""
-            try:
-                detail = exc.read().decode("utf-8", "replace")
-            except Exception:
-                pass
-            raise RuntimeError(
-                f"Groq API error {exc.code} {exc.reason}. "
-                f"Detail: {detail or '(none)'}"
-            ) from exc
-        except (urllib.error.URLError, ConnectionError, OSError) as exc:
-            last_error = exc
-            if attempt < MAX_RETRIES:
-                time.sleep(RETRY_DELAY)
-
-    raise RuntimeError(
-        f"Could not reach the Groq API after {MAX_RETRIES} tries: {last_error}"
-    )
-# ---------------------------------------------------------------------------
-# Console self-test (no GUI) -- validates the API connection.
+# Console self-test (no GUI) -- validates the CrewAI connection.
 # ---------------------------------------------------------------------------
 def run_selftest():
-    api_key = get_api_key()
-    if not api_key:
-        print("[selftest] ERROR: API_KEY not found in .env")
-        return 1
-    print(f"[selftest] model = {DEFAULT_MODEL}")
     print("[selftest] sending: 'Hello, who is Dr. Shamima Jahan?'")
     try:
-        reply = chat_completion(
+        reply = crew_chat(
             [{"role": "user", "content": "Hello, who is Dr. Shamima Jahan?"}]
         )
         print("[selftest] reply: " + reply)
@@ -135,18 +41,13 @@ def run_selftest():
 class ChatApp:
     def __init__(self, root):
         self.root = root
-        self.api_key = get_api_key()
         self.history = []  # list of {"role": ..., "content": ...}
 
-        root.title("Groq Chatbot")
+        root.title("Crew AI Chatbot")
         root.geometry("680x580")
         root.configure(bg="#f5f5f5")
 
         self._build_ui()
-
-        if not self.api_key:
-            self._add_line("Warning: API_KEY missing in .env. Add it & restart.",
-                           "system")
 
     # -- UI construction ------------------------------------------------
     def _build_ui(self):
@@ -227,7 +128,7 @@ class ChatApp:
 
     def _worker(self, messages):
         try:
-            reply = chat_completion(messages, api_key=self.api_key)
+            reply = crew_chat(messages)
             self.root.after(0, self._finish, reply, None)
         except Exception as exc:
             self.root.after(0, self._finish, None, str(exc))

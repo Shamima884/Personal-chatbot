@@ -535,7 +535,7 @@ const BOTS = {
   },
   main: {
     name: "Groq AI",
-    title: "Powered by Groq — connects to the LLM through the local server. Ask anything!",
+    title: "Powered by a Crew AI agent — connects to the LLM through the local server. Ask anything!",
     suggestions: [
       "Hello, who is Dr. Shamima Jahan?",
       "Write a short greeting from Dr. Shamima Jahan for her students.",
@@ -709,7 +709,7 @@ async function sendMessage() {
     addMessage(
       "Sorry, something went wrong. " + err.message + "\n\n" +
       "Hints:\n- Make sure the local server is running (python server.py).\n" +
-      "- Make sure API_KEY is set in the .env file in the project folder.",
+      "- For the Crew AI agent: set GROQ_API_KEY or start a local Ollama server.",
       "error"
     );
   } finally {
