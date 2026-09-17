@@ -6,7 +6,6 @@
  *   custom_chatbot.py  -> "Custom"
  *   profile_chatbot.py -> "Profile"
  *   story_chatbot.py   -> "Story"
- *   main.py            -> "Groq AI" (talks to the local server /api/chat)
  * ------------------------------------------------------------------------- */
 
 "use strict";
@@ -160,11 +159,6 @@ const PROFILE_KNOWLEDGE = [
     answer: "Her name is Dr. Shamima Jahan.",
   },
   {
-    label: "age",
-    keywords: ["age", "old", "how old", "born", "year old", "44"],
-    answer: "She is 44 years old.",
-  },
-  {
     label: "qualification",
     keywords: ["qualification", "degree", "education", "educated",
                "mbbs", "mphil", "m.phil", "physiology", "study", "studied",
@@ -217,13 +211,13 @@ const PROFILE_KNOWLEDGE = [
   },
 ];
 
-const PROFILE_PRIORITY = ["name", "age", "qualification", "ai", "jobstation", "occupation",
+const PROFILE_PRIORITY = ["name", "qualification", "ai", "jobstation", "occupation",
                           "responsibility"];
 
 const PROFILE_FALLBACK = (
   "Sorry, I can only answer questions that are based on Dr. Shamima Jahan's " +
   "profile. I have no information about that. You can ask about her name, " +
-  "age, educational qualification, AI training, occupation, responsibility, " +
+  "educational qualification, AI training, occupation, responsibility, " +
   "or job station."
 );
 /* ============================================================
@@ -430,9 +424,17 @@ function pickBest(knowledge, priority, question) {
   return { topic: best, score: bestScore };
 }
 
+/* ---------- Politeness replies ---------- */
+const THANKS_REPLY = "You are well come";
+
+function isThanks(question) {
+  return question.toLowerCase().includes("thank");
+}
+
 function getCustomAnswer(question) {
   const q = question.trim();
   if (!q) return "Please type a question.";
+  if (isThanks(q)) return THANKS_REPLY;
 
   const nq = normalize(q);
   const detailQ = SHOW_DETAILS_KEYWORDS.some((k) => nq.includes(k));
@@ -457,6 +459,7 @@ function getCustomAnswer(question) {
 function getProfileAnswer(question) {
   const q = question.trim();
   if (!q) return "Please type a question.";
+  if (isThanks(q)) return THANKS_REPLY;
 
   const { topic, score } = pickBest(PROFILE_KNOWLEDGE, PROFILE_PRIORITY, q);
   if (topic === null || score === 0) return PROFILE_FALLBACK;
@@ -466,6 +469,7 @@ function getProfileAnswer(question) {
 function getStoryAnswer(question) {
   const q = question.trim();
   if (!q) return "Please type a question.";
+  if (isThanks(q)) return THANKS_REPLY;
 
   const nq = normalize(q);
   if (
@@ -507,10 +511,9 @@ const BOTS = {
   },
   profile: {
     name: "Profile",
-    title: "Ask about her name, age, educational qualification, AI training, occupation, responsibility or job station.",
+    title: "Ask about her name, educational qualification, AI training, occupation, responsibility or job station.",
     suggestions: [
       "What is her name?",
-      "How old is she?",
       "What is her educational qualification?",
       "Where did she complete her AI training?",
       "What does she do?",
@@ -533,47 +536,11 @@ const BOTS = {
     ],
     ask: (text) => getStoryAnswer(text),
   },
-  main: {
-    name: "Groq AI",
-    title: "Powered by a Crew AI agent — connects to the LLM through the local server. Ask anything!",
-    suggestions: [
-      "Hello, who is Dr. Shamima Jahan?",
-      "Write a short greeting from Dr. Shamima Jahan for her students.",
-      "What is physiology?",
-      "Explain the heart in one paragraph.",
-    ],
-    ask: async (text) => {
-      const messages = [...(chat.HISTORY.main || [])];
-      messages.push({ role: "user", content: text });
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages,
-          bot: "main",
-          session_id: isServerId(chat.current.main) ? chat.current.main : null,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Server error " + res.status);
-      }
-      if (data.session) {
-        // Adopt the server session so the drawer shows it too.
-        upsertLocalSession(data.session, [
-          ...(chat.HISTORY.main || []),
-          { role: "user", content: text },
-          { role: "assistant", content: data.reply },
-        ]);
-      }
-      return data.reply;
-    },
-  },
 };
 
 const chat = {
   active: "custom",
-  HISTORY: { custom: [], profile: [], story: [], main: [] },
+  HISTORY: { custom: [], profile: [], story: [] },
   sessions: [],   // [{id, bot, title, created_at, updated_at, message_count, messages[]}]
   current: {},    // bot id -> active session id
   busy: false,
@@ -695,21 +662,17 @@ async function sendMessage() {
     if (!reply) throw new Error("Empty reply.");
     addMessage(reply, "bot");
     chat.HISTORY[bot].push({ role: "assistant", content: reply });
-    if (bot !== "main") {
-      // The offline bots only know their answers client-side, so we save
-      // the exchange to the history drawer (and to the server/PostgreSQL
-      // when available).
-      persistExchange(bot, [
-        { role: "user", content: text },
-        { role: "assistant", content: reply },
-      ]);
-    }
+    // The bots answer client-side; we save the exchange to the history
+    // drawer (and to the server/PostgreSQL when available).
+    persistExchange(bot, [
+      { role: "user", content: text },
+      { role: "assistant", content: reply },
+    ]);
   } catch (err) {
     removeTyping();
     addMessage(
       "Sorry, something went wrong. " + err.message + "\n\n" +
-      "Hints:\n- Make sure the local server is running (python server.py).\n" +
-      "- For the Crew AI agent: set GROQ_API_KEY or start a local Ollama server.",
+      "Hints:\n- Make sure the local server is running (python server.py).",
       "error"
     );
   } finally {
@@ -745,7 +708,6 @@ function botMeta(bot) {
     custom: { label: "Custom", cls: "b-custom" },
     profile: { label: "Profile", cls: "b-profile" },
     story: { label: "Story", cls: "b-story" },
-    main: { label: "Groq AI", cls: "b-main" },
   }[bot] || { label: bot || "Chat", cls: "b-custom" };
 }
 
@@ -894,6 +856,7 @@ function toggleDrawer() {
 function renderDrawer() {
   sessionListEl.innerHTML = "";
   const sorted = [...chat.sessions]
+    .filter((s) => BOTS[s.bot])   // hide sessions of removed bots
     .sort((a, b) => String(b.updated_at || "").localeCompare(String(a.updated_at || "")));
   if (sorted.length === 0) {
     const empty = document.createElement("p");
@@ -947,6 +910,7 @@ async function loadSessions() {
     const data = await apiGet("/api/history");
     serverOk = true;
     for (const meta of data.sessions || []) {
+      if (!BOTS[meta.bot]) continue;   // skip bots removed from the interface
       const existing = findSession(meta.id);
       if (existing) Object.assign(existing, meta);   // keep cached messages
       else chat.sessions.push(Object.assign({}, meta, { messages: [] }));
@@ -970,6 +934,7 @@ async function openSession(id) {
     }
   }
   if (!session) return;
+  if (!BOTS[session.bot]) return;   // bot removed from the interface
   upsertLocalSession(session, session.messages || []);
   chat.HISTORY[session.bot] = (session.messages || [])
     .map((m) => ({ role: m.role, content: m.content }));
@@ -1057,13 +1022,15 @@ function runSelfTest() {
     ["custom", "How many years has she been working?", "14 years"],
     ["custom", "Tell everything about her", "M.Phil in Physiology"],
     ["custom", "What is the capital of France?", "Sorry, I can only answer"],
+    ["custom", "Thanks!", "You are well come"],
     ["profile", "What is her name?", "Her name is Dr. Shamima Jahan."],
-    ["profile", "How old is she?", "44 years old"],
+    ["profile", "How old is she?", "Sorry, I can only answer"],
     ["profile", "What is her educational qualification?", "AI training"],
     ["profile", "Where did she complete her AI training?", "AI Academy of Bangladesh"],
     ["profile", "What does she do?", "medical teaching"],
     ["profile", "Where does she work?", "Tairunnessa Medical College"],
     ["profile", "What is the capital of France?", "Sorry, I can only answer"],
+    ["profile", "Thank you", "You are well come"],
     ["story", "Who is Dr. Shamima Jahan?", "Dr. Shamima Jahan"],
     ["story", "Where is she from?", "village in rural Bangladesh"],
     ["story", "What challenge did she face?", "language barrier"],
@@ -1071,6 +1038,7 @@ function runSelfTest() {
     ["story", "What lesson did she learn?", "stepping stones to greatness"],
     ["story", "What advice does she have?", "break through any barrier"],
     ["story", "What is the capital of France?", "Sorry, I can only answer"],
+    ["story", "Thank you so much", "You are well come"],
   ];
   const results = [];
   for (const [bot, question, expected] of tests) {

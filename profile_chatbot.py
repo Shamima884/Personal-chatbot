@@ -33,11 +33,6 @@ KNOWLEDGE = [
         "answer": "Her name is Dr. Shamima Jahan.",
     },
     {
-        "label": "age",
-        "keywords": ["age", "old", "how old", "born", "year old", "44"],
-        "answer": "She is 44 years old.",
-    },
-    {
         "label": "qualification",
         "keywords": ["qualification", "degree", "education", "educated",
                      "mbbs", "mphil", "m.phil", "physiology", "study", "studied",
@@ -92,13 +87,13 @@ KNOWLEDGE = [
         ),
     },
 ]
-PRIORITY = ["name", "age", "qualification", "ai", "jobstation", "occupation",
+PRIORITY = ["name", "qualification", "ai", "jobstation", "occupation",
             "responsibility"]
 
 FALLBACK = (
     "Sorry, I can only answer questions that are based on Dr. Shamima Jahan's "
     "profile. I have no information about that. You can ask about her name, "
-    "age, educational qualification, AI training, occupation, responsibility, "
+    "educational qualification, AI training, occupation, responsibility, "
     "or job station."
 )
 
@@ -243,7 +238,6 @@ class ChatApp:
 # ---------------------------------------------------------------------------
 TEST_QUESTIONS = [
     "What is her name?",
-    "How old is she?",
     "What is her educational qualification?",
     "Where did she complete her AI training?",
     "Is she one of the masterminds of AIAB?",

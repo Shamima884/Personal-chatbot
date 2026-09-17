@@ -1,15 +1,13 @@
 # Chatbot Web App
 
-A browser version of the four tkinter chatbots in this project
-(`main.py`, `custom_chatbot.py`, `profile_chatbot.py`, `story_chatbot.py`).
+A browser version of the offline tkinter chatbots in this project
+(`custom_chatbot.py`, `profile_chatbot.py`, `story_chatbot.py`).
 
 - **Custom / Profile / Story** tabs run entirely in JavaScript (the same
   knowledge bases and keyword-matching logic as the Python bots — no server
   round-trip, no API needed).
-- **Groq AI** tab talks to the Python local server, which answers through a
-  **CrewAI agent** (`crew_agent.py`). No API key is stored in the project:
-  Groq is used when `GROQ_API_KEY` is set (e.g. on Render), otherwise a
-  local Ollama server handles it — fully key-less.
+- The backend also exposes a CrewAI chat API (`/api/chat`, answered by
+  `crew_agent.py`), which is not shown in the interface.
 - **History drawer** — the **☰ History** button opens a slide-out panel with
   every conversation. Click a conversation to reopen it, **✕** deletes it,
   **＋ New chat** starts a fresh conversation. History is stored in
@@ -34,16 +32,15 @@ To use a different port:
 python server.py 9000
 ```
 
-> The Groq AI tab is answered by a CrewAI agent. Install Ollama
-> (https://ollama.com) and run it for a key-less setup, or set the
-> `GROQ_API_KEY` env var (Render does this for you). The other three tabs
-> work offline.
+> The three tabs work fully offline. The optional CrewAI chat API
+> (`/api/chat`) needs Ollama (https://ollama.com) or the `GROQ_API_KEY`
+> env var (Render does this for you).
 
 ## History drawer
 
 Click **☰ History** in the tab bar to open the slide-out drawer.
 
-- Every conversation across all four tabs is listed there, newest first,
+- Every conversation across all three tabs is listed there, newest first,
   with a bot badge, the first question as the title, and a relative time.
 - Click a conversation to reopen it (it switches to the right tab).
 - **✕** deletes a conversation; **＋ New chat** starts a fresh conversation
