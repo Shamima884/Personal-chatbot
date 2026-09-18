@@ -52,9 +52,14 @@ PROJECT_ROOT = os.path.dirname(BASE_DIR)  # the folder that holds .env
 DEFAULT_PORT = 8000
 
 # The CrewAI agent engine lives in the project root (crew_agent.py).
+# It is optional: the interface only uses the offline tab bots, so a missing
+# crewai package must never prevent the server from starting.
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
-from crew_agent import crew_chat  # noqa: E402
+try:
+    from crew_agent import crew_chat  # noqa: E402
+except Exception:  # crewai / langchain packages not installed
+    crew_chat = None
 
 MIME_TYPES = {
     ".html": "text/html; charset=utf-8",
@@ -483,6 +488,13 @@ class Handler(BaseHTTPRequestHandler):
                 return
             bot = data.get("bot") or "main"
             session_id = data.get("session_id")
+            if crew_chat is None:
+                self._send(503, json.dumps({
+                    "error": "The CrewAI chat engine is not installed on "
+                             "this server. The three chat tabs work offline "
+                             "and do not need it."
+                }))
+                return
             try:
                 reply = crew_chat(messages)
             except Exception as exc:

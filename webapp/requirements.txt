@@ -1,8 +1,11 @@
-# CrewAI agents power the AI chat tab (crew_agent.py). No API key stored.
-crewai>=1.15
-langchain-groq>=1.1
-langchain-ollama>=1.1
-
-# Optional: PostgreSQL driver for persisting chat history (see README).
-#   pip install -r requirements.txt
+# Core: PostgreSQL driver for persisting chat history (optional at runtime —
+# the server falls back to in-memory storage if the driver or DATABASE_URL
+# is missing). Kept light so Render builds stay fast and reliable.
 psycopg[binary]>=3.1
+
+# OPTIONAL — only needed for the /api/chat CrewAI endpoint, which the
+# interface does not use. These packages are heavy; install manually if you
+# enable that endpoint (with Ollama or a GROQ_API_KEY env var):
+#   crewai
+#   langchain-groq
+#   langchain-ollama
