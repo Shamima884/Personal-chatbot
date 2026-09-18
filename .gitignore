@@ -21,3 +21,8 @@ server_test.txt
 
 # Local server runtime logs.
 webapp/server_*.log
+webapp/_server_log.txt
+
+# Local push/test output artifacts.
+_push_out.txt
+_exp_*.txt

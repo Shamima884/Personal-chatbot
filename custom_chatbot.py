@@ -97,14 +97,15 @@ KNOWLEDGE = [
     },
     {
         "label": "experience",
-        "keywords": ["experience", "how long", "how many years", "14 years",
+        "keywords": ["experience", "previous", "previously", "current position",
+                     "how long", "how many years", "14 years",
                      "years", "been working", "she has been working",
                      "has she been working", "she been working", "seniority",
                      "since", "tenure", "duration", "career"],
         "answer": (
-            "She has been working for the last 14 years as Associate Professor "
-            "in the Physiology department at Tairunnessa Memorial Medical "
-            "College, Gazipur."
+            "Previous: Assistant Professor at Tairunnessa Memorial Medical "
+            "College, Gazipur. Current position: Associate Professor at "
+            "Tairunnessa Memorial Medical College, Gazipur."
         ),
     },
     {
